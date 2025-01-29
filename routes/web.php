@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get('/',[UserController::class,'dashboard'])->name('dashboard');
 
+    Route::resource('users',UserController::class);
 });
 Route::middleware('guest')->group(function () {
     Route::get('/login',[AuthController::class,'loginForm'])->name('login.form');

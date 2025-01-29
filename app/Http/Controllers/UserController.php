@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -14,6 +15,11 @@ class UserController extends Controller
         return view('dashboard');
     }
 
+    public function index()
+    {
+        $users=User::where('is_active',1)->paginate(2);
+        return view('users.index',compact('users'));
+    }
     /**
      * Show the form for creating a new resource.
      */
