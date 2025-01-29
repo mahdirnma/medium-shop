@@ -59,7 +59,13 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        $status = $product->update($request->all());
+        if($status){
+            return to_route('products.index');
+
+        }else{
+            return to_route('products.edit', $product);
+        }
     }
 
     /**

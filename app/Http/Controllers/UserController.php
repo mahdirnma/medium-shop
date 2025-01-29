@@ -64,8 +64,8 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user=$user->update($request->all());
-        if($user){
+        $status=$user->update($request->all());
+        if($status){
             return to_route('users.index');
 
         }else{
