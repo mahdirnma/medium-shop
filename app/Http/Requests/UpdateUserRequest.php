@@ -22,7 +22,8 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required',
+            'role' => 'nullable|in:user,operator',
         ];
     }
 }
