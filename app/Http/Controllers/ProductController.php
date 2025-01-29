@@ -73,6 +73,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->update(['is_active' => 0]);
+        return to_route('products.index');
     }
 }
