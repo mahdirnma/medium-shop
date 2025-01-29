@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
@@ -22,7 +23,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('products.create');
+        if (Gate::allows('product-manage')){
+            return view('products.create');
+        }
+        abort(403);
     }
 
     /**
@@ -30,12 +34,15 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $product=Product::create($request->all());
-        if($product){
-            return to_route('products.index');
-        }else{
-            return to_route('products.create');
+        if (Gate::allows('product-manage')){
+            $product=Product::create($request->all());
+            if($product){
+                return to_route('products.index');
+            }else{
+                return to_route('products.create');
+            }
         }
+        abort(403);
     }
 
     /**
@@ -51,7 +58,10 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.update', compact('product'));
+        if (Gate::allows('product-manage')){
+            return view('products.update', compact('product'));
+        }
+        abort(403);
     }
 
     /**
@@ -59,13 +69,16 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        $status = $product->update($request->all());
-        if($status){
-            return to_route('products.index');
+        if (Gate::allows('product-manage')){
+            $status = $product->update($request->all());
+            if($status){
+                return to_route('products.index');
 
-        }else{
-            return to_route('products.edit', $product);
+            }else{
+                return to_route('products.edit', $product);
+            }
         }
+        abort(403);
     }
 
     /**
@@ -73,7 +86,10 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->update(['is_active' => 0]);
-        return to_route('products.index');
+        if (Gate::allows('product-delete')){
+            $product->update(['is_active' => 0]);
+            return to_route('products.index');
+        }
+        abort(403);
     }
 }

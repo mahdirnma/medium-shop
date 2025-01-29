@@ -40,7 +40,9 @@
                             <label for="role" class="font-semibold ml-5">: role</label>
                             <select name="role" id="role" class="cursor-pointer w-2/5 h-8 rounded outline-0 pl-2 border border-gray-400">
                                 <option value="user">user</option>
+                                @can('change-role')
                                 <option value="operator">operator</option>
+                                @endcan
                             </select>
                             @error('role')
                             <p class="text-red-700">{{$message}}</p>

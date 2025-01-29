@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -19,7 +20,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users=User::where('is_active',1)->paginate(2);
+        $users=User::where('is_active',1)->paginate(4);
         return view('users.index',compact('users'));
     }
     /**
@@ -27,7 +28,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        if (Gate::allows('user-create')) {
+            return view('users.create');
+        }
+        abort(403);
     }
 
     /**
@@ -35,12 +39,15 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $user=User::create($request->all());
-        if($user){
-            return to_route('users.index');
-        }else{
-            return to_route('users.create');
+        if (Gate::allows('user-create')) {
+            $user=User::create($request->all());
+            if($user){
+                return to_route('users.index');
+            }else{
+                return to_route('users.create');
+            }
         }
+        abort(403);
     }
 
     /**
@@ -56,7 +63,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('users.update',compact('user'));
+        if (Gate::allows('user-update', $user)) {
+            return view('users.update',compact('user'));
+        }
+        abort(403);
     }
 
     /**
@@ -64,13 +74,16 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $status=$user->update($request->all());
-        if($status){
-            return to_route('users.index');
+        if (Gate::allows('user-update', $user)) {
+            $status=$user->update($request->all());
+            if($status){
+                return to_route('users.index');
 
-        }else{
-            return to_route('users.edit',$user);
+            }else{
+                return to_route('users.edit',$user);
+            }
         }
+        abort(403);
     }
 
     /**
@@ -78,7 +91,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->update(['is_active'=>0]);
-        return to_route('users.index');
+        if (Gate::allows('user-delete', $user)) {
+            $user->update(['is_active'=>0]);
+            return to_route('users.index');
+        }
+        abort(403);
     }
 }

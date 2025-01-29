@@ -6,7 +6,9 @@
     <div class="w-full h-[88%] bg-gray-200 flex items-center justify-center">
         <div class="w-[90%] h-5/6 bg-white rounded-xl pt-3 flex flex-col items-center">
             <div class="w-[90%] h-1/5 flex justify-between items-center border-b">
+                @can('user-create')
                 <a href="{{route('users.create')}}" class="px-10 py-3 rounded-xl font-light text-white bg-gray-800">add user +</a>
+                @endcan
                 <h2 class="text-xl">users</h2>
             </div>
             <div class="w-[90%] h-3/5 flex flex-col justify-center">
@@ -24,23 +26,29 @@
                     <tbody>
                     @foreach($users as $user)
                         <tr>
+                            @can('user-index',$user)
                             <td class="text-center">
+                                @can('user-delete',$user)
                                 <form action="{{route('users.destroy',compact('user'))}}" method="post">
                                     @csrf
                                     @method('delete')
                                     <button type="submit" class="text-green-600 cursor-pointer">delete</button>
                                 </form>
+                                @endcan
                             </td>
                             <td class="text-center">
+                                @can('user-update',$user)
                                 <form action="{{route('users.edit',compact('user'))}}" method="get">
                                     @csrf
                                     <button type="submit" class="text-cyan-600 cursor-pointer">update</button>
                                 </form>
+                                @endcan
                             </td>
                             <td class="text-center">{{$user->role}}</td>
                             <td class="text-center">{{$user->email}}</td>
                             <td class="text-center">{{$user->name}}</td>
                             <td class="text-center">{{$user->id}}</td>
+                            @endcan
                         </tr>
                     @endforeach
                     </tbody>
