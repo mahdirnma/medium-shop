@@ -20,6 +20,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('users',UserController::class);
     Route::resource('products',ProductController::class);
+
+    Route::post('/logout',[AuthController::class,'logout'])->name('logout');
+
 });
 Route::middleware('guest')->group(function () {
     Route::get('/login',[AuthController::class,'loginForm'])->name('login.form');
