@@ -30,7 +30,12 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        //
+        $product=Product::create($request->all());
+        if($product){
+            return to_route('products.index');
+        }else{
+            return to_route('products.create');
+        }
     }
 
     /**
