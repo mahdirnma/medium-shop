@@ -13,7 +13,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::where('is_active', 1)->paginate(2);
+        return view('products.index', compact('products'));
     }
 
     /**
