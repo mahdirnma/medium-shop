@@ -76,8 +76,9 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        $user->update(['is_active'=>0]);
+        return to_route('users.index');
     }
 }
