@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::get('/',[UserController::class,'dashboard'])->name('dashboard');
 
 Route::get('/login',[AuthController::class,'loginForm'])->name('login.form');
